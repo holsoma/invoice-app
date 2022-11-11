@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="header flex">
       <div class="left flex flex-column">
-        <h1>Invoices</h1>
-        <span>There are {{ invoiceData.length }} total invoices</span>
+        <h1>Subscriptions</h1>
+        <span>There are {{ invoiceData.length }} total subscriptions</span>
       </div>
       <div class="right flex">
         <div @click="toggleFilterMenu" class="filter flex">
@@ -23,7 +23,7 @@
           <div class="inner-button flex">
             <img src="@/assets/icon-plus.svg" alt="" />
           </div>
-          <span>New Invoice</span>
+          <span>New Subscription</span>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
     <div v-else class="empty flex flex-column">
       <img src="@/assets/illustration-empty.svg" alt="" />
       <h3>There is nothing here</h3>
-      <p>Create a new invoice by clicking the New Invoice button and get started</p>
+      <p>Create a new subscription by clicking the New Subscription button and get started</p>
     </div>
   </div>
 </template>

@@ -2,8 +2,8 @@
   <div @click="checkClick" ref="invoiceWrap" class="invoice-wrap flex flex-column">
     <form @submit.prevent="submitForm" class="invoice-content">
       <Loading v-show="loading" />
-      <h1 v-if="!editInvoice">New Invoice</h1>
-      <h1 v-else>Edit Invoice</h1>
+      <h1 v-if="!editInvoice">New Subscription</h1>
+      <h1 v-else>Edit Subscription</h1>
 
       <!-- Bill From -->
       <div class="bill-from flex flex-column">
@@ -52,22 +52,23 @@
       <div class="invoice-work flex flex-column">
         <div class="payment flex">
           <div class="input flex flex-column">
-            <label for="invoiceDate">Invoice Date</label>
+            <label for="invoiceDate">Start Date</label>
             <input type="date" id="invoiceDate" v-model="invoiceDate"/>
           </div>
           <div class="input flex flex-column">
-            <label for="paymentDueDate">Payment Due</label>
+            <label for="paymentDueDate">End Date</label>
             <input disabled type="text" id="paymentDueDate" v-model="paymentDueDate" />
           </div>
         </div>
         <div class="input flex flex-column">
-          <label for="paymentTerms">Payment Terms</label>
+          <label for="paymentTerms">Subscription Terms</label>
           <select required type="text" id="paymentTerms" v-model="paymentTerms">
             <option value="1">Net 1 Year</option>
             <option value="2">Net 2 Years</option>
             <option value="3">Net 3 Years</option>
             <option value="4">Net 4 Years</option>
             <option value="5">Net 5 Years</option>
+            <!-- <option>Custom</option> -->
             <!-- <option value="364">Net 1 Year</option>
             <option value="729">Net 2 Years</option>
             <option value="1094">Net 3 Years</option>
@@ -76,8 +77,8 @@
           </select>
         </div>
         <div class="input flex flex-column">
-          <label for="productDescription">Product Description</label>
-          <textarea required type="text" id="productDescription" v-model="productDescription" />
+          <label for="productDescription">Description</label>
+          <textarea required rows=6 type="text" id="productDescription" v-model="productDescription"/>
         </div>
         <div class="work-items">
           <h3>Item List</h3>
@@ -113,8 +114,8 @@
         </div>
         <div class="right flex">
           <button v-if="!editInvoice" type="submit" @click="saveDraft" class="dark-purple">Save Draft</button>
-          <button v-if="!editInvoice" type="submit" @click="publishInvoice" class="purple">Create Invoice</button>
-          <button v-if="editInvoice" type="sumbit" class="purple">Update Invoice</button>
+          <button v-if="!editInvoice" type="submit" @click="publishInvoice" class="purple">Create Subscription</button>
+          <button v-if="editInvoice" type="sumbit" class="purple">Update Subscription</button>
         </div>
       </div>
     </form>
@@ -284,8 +285,22 @@ export default {
       this.invoiceItemList.forEach((item) => {
         item.total = item.total.toFixed(2);
       });
+
+      // get number of invoices in "invoices" firestore collection that starts with current year
+      var invoiceCount = await db
+        .collection("invoices")
+        .where("invoiceDateUnix", ">=", new Date().getFullYear())
+        .get();
+      // console.log(invoiceCount.docs.length);
+
+      // front pad invoice number with 0s until there are 3 digits
+      var invoicePadded = (invoiceCount.docs.length+1).toString().padStart(3, "0");
+
+      // concat invoicePadded with current year
+      var invoiceId = new Date().getFullYear() + invoicePadded;
+
       await database.set({
-        invoiceId: uid(6),
+        invoiceId: invoiceId,
         billerStreetAddress: this.billerStreetAddress,
         billerZipCode: this.billerZipCode,
         clientName: this.clientName,
@@ -514,6 +529,10 @@ export default {
       outline: none;
     }
   }
+  textarea {
+    white-space: pre;
+    resize: none;
+  }
   /* Chrome, Safari, Edge, Opera */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
@@ -525,6 +544,7 @@ export default {
     -moz-appearance: textfield;
   }
   textarea {
+    white-space: pre;
     resize: none;
   }
 }
