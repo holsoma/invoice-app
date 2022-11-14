@@ -59,11 +59,11 @@
       </div>
       <div class="middle flex">
         <div class="payment flex flex-column">
-          <h4>Invoice Date</h4>
+          <h4>Start Date</h4>
           <p>
             {{ new Date(currentInvoice.invoiceDate).toLocaleDateString('en-gb', { day: 'numeric', month: 'short', year: 'numeric' }) }}
           </p>
-          <h4>Payment Date</h4>
+          <h4>End Date</h4>
           <p>
             {{ new Date(currentInvoice.paymentDueDate).toLocaleDateString('en-gb', { day: 'numeric', month: 'short', year: 'numeric' }) }}
           </p>
@@ -86,7 +86,7 @@
             <p>Item Name</p>
             <p>Qty</p>
             <p>Price</p>
-            <p>Total with GST</p>
+            <p>Total</p>
           </div>
           <div v-for="(item, index) in currentInvoice.invoiceItemList" :key="index" class="item flex">
             <p>{{ item.itemName }}</p>
@@ -98,6 +98,8 @@
         <div class="total flex">
           <p>Amount Due</p>
           <p>{{ currentInvoice.invoiceTotal }}</p>
+          <!-- <p>Amount Due after GST</p>
+          <p>{{ (currentInvoice.invoiceTotal*1.07).toFixed(2) }}</p> -->
         </div>
       </div>
     </div>
@@ -344,8 +346,9 @@ export default {
         background-color: rgba(12, 14, 22, 0.7);
         align-items: center;
         border-radius: 0 0 20px 20px;
+        flex-wrap: wrap;
         p {
-          flex: 1;
+          flex: 50%;
           font-size: 12px;
         }
         p:nth-child(2) {

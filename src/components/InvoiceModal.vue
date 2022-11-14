@@ -87,13 +87,13 @@
               <th class="item-name">Item Name</th>
               <th class="qty">Qty</th>
               <th class="price">Price</th>
-              <th class="total">Total with GST</th>
+              <th class="total">Total</th>
             </tr>
             <tr class="table-items flex" v-for="(item, index) in invoiceItemList" :key="index">
               <td class="item-name"><textarea rows=2 type="text" v-model="item.itemName" /></td>
               <td class="qty"><input type="number" min="0" v-model="item.qty" /></td>
               <td class="price"><input type="number" step="0.01" min="0" v-model="item.price" /></td>
-              <td class="total flex" >${{(item.total = (item.qty * item.price * 1.07)).toFixed(2)}}</td>
+              <td class="total flex" >${{(item.total = (item.qty * item.price)).toFixed(2)}}</td>
               <img @click="deleteInvoiceItem(item.id)" src="@/assets/icon-delete.svg" alt="" />
             </tr>
           </table>
